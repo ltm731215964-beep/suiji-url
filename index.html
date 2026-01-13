@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognitive Horizon | 认知边界</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;          /* 纯深背景 */
+            --panel: #141414;       /* 稍微浅一点的黑色面板 */
+            --text-main: #e0e0e0;   /* 主文字灰白 */
+            --text-sub: #666;       /* 次要文字深灰 */
+            --accent: #ffffff;      /* 纯白作为高亮 */
+            --border: #222;         /* 边框色 */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: "Optima", "Charter", "PingFang SC", "Hiragino Sans GB", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            letter-spacing: 0.05em;
+        }
+
+        /* 极简容器 */
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            padding: 40px;
+        }
+
+        /* 装饰性的编号或小字 */
+        .meta-text {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            margin-bottom: 20px;
+            letter-spacing: 0.3em;
+        }
+
+        /* 网站展示区 */
+        #display-area {
+            position: relative;
+            padding: 60px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 40px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .site-name {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--accent);
+            margin-bottom: 15px;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .site-url {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            font-family: "Courier New", monospace; /* 程序员/严谨感 */
+        }
+
+        /* 按钮设计 */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .btn {
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            cursor: pointer;
+            font-size: 0.85rem;
+            padding: 10px 0;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .btn:hover {
+            color: var(--accent);
+        }
+
+        /* 按钮下方的互动线条 */
+        .btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .btn:hover::after {
+            width: 100%;
+        }
+
+        /* 辅助动画 */
+        .loading {
+            filter: blur(8px);
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="meta-text">Randomizing Consciousness / 随机探索</div>
+    
+    <div id="display-area">
+        <div id="name" class="site-name">Loading...</div>
+        <div id="url" class="site-url">---</div>
+    </div>
+
+    <div class="button-group">
+        <button class="btn" onclick="shuffle()">SHUFFLE 随机</button>
+        <button class="btn" onclick="openSite()">ENTER 进入</button>
+    </div>
+</div>
+
+<script>
+    const sites = [
+        { name: "极客时间", url: "https://time.geekbang.org/" },
+        { name: "网易公开课", url: "https://open.163.com/" },
+        { name: "中国大学 MOOC", url: "https://www.icourse163.org/" },
+        { name: "混沌大学", url: "https://www.hundun.cn/" },
+        { name: "豆瓣读书", url: "https://book.douban.com/" },
+        { name: "简书", url: "https://www.jianshu.com/" },
+        { name: "中国知网", url: "https://www.cnki.net/" },
+        { name: "维基百科", url: "https://zh.wikipedia.org/" },
+        { name: "国家图书馆", url: "http://www.nlc.cn/" },
+        { name: "人民网新闻", url: "http://www.people.com.cn/" },
+        { name: "新华网新闻", url: "http://www.xinhuanet.com/" },
+        { name: "凤凰网资讯", url: "https://www.ifeng.com/" }
+    ];
+
+    let currentSite = null;
+
+    function shuffle() {
+        const display = document.getElementById('display-area');
+        const nameEl = document.getElementById('name');
+        const urlEl = document.getElementById('url');
+
+        // 高级感动画：先模糊消失
+        display.classList.add('loading');
+        
+        setTimeout(() => {
+            const randomIndex = Math.floor(Math.random() * sites.length);
+            currentSite = sites[randomIndex];
+            
+            nameEl.innerText = currentSite.name;
+            urlEl.innerText = currentSite.url;
+            
+            // 重新显现
+            display.classList.remove('loading');
+        }, 400);
+    }
+
+    function openSite() {
+        if (currentSite) window.open(currentSite.url, '_blank');
+    }
+
+    // 初始化调用
+    window.onload = shuffle;
+</script>
+
+</body>
+</html>
