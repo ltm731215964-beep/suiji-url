@@ -3,17 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cognitive Horizon | 认知边界</title>
+    <title>The Oracle - 知识神谕</title>
     <style>
-        :root {
-            --bg: #0a0a0a;          /* 纯深背景 */
-            --panel: #141414;       /* 稍微浅一点的黑色面板 */
-            --text-main: #e0e0e0;   /* 主文字灰白 */
-            --text-sub: #666;       /* 次要文字深灰 */
-            --accent: #ffffff;      /* 纯白作为高亮 */
-            --border: #222;         /* 边框色 */
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -21,164 +12,559 @@
         }
 
         body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            font-family: "Optima", "Charter", "PingFang SC", "Hiragino Sans GB", sans-serif;
+            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+            background: #0a0a0a;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            letter-spacing: 0.05em;
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
+            padding: 40px 20px;
+            color: #e0e0e0;
         }
 
-        /* 极简容器 */
+        /* 扫描线效果 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* 环境光效 */
+        .ambient-light {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(100, 100, 100, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
         .container {
             text-align: center;
-            width: 100%;
-            max-width: 600px;
-            padding: 40px;
-        }
-
-        /* 装饰性的编号或小字 */
-        .meta-text {
-            font-size: 10px;
-            text-transform: uppercase;
-            color: var(--text-sub);
-            margin-bottom: 20px;
-            letter-spacing: 0.3em;
-        }
-
-        /* 网站展示区 */
-        #display-area {
             position: relative;
-            padding: 60px 0;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 40px;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        /* 顶部装饰线 */
+        .header-line {
+            width: 60px;
+            height: 1px;
+            background: #333;
+            margin: 0 auto 20px;
+            animation: expandLine 1s ease;
+        }
+
+        @keyframes expandLine {
+            from { width: 0; }
+            to { width: 60px; }
+        }
+
+        .title {
+            font-size: 2.8em;
+            color: #fff;
+            margin-bottom: 5px;
+            font-weight: 300;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            animation: fadeIn 1.2s ease;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .subtitle {
+            font-size: 0.75em;
+            color: #666;
+            margin-bottom: 50px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            animation: fadeIn 1.2s ease 0.3s backwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 神谕容器 */
+        .oracle-stage {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            margin: 0 auto 50px;
+            perspective: 1200px;
+        }
+
+        /* 中心符文 */
+        .oracle-symbol {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .oracle-symbol.revealing {
+            animation: symbolPulse 1.5s ease-in-out;
+        }
+
+        .oracle-symbol.revealed {
+            opacity: 0.2;
+            transform: translate(-50%, -50%) scale(0.5);
+        }
+
+        @keyframes symbolPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        /* 外圈 */
+        .symbol-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 1px solid #333;
+            border-radius: 50%;
+            animation: rotateRing 20s linear infinite;
+        }
+
+        .symbol-ring::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background: #666;
+            border-radius: 50%;
+        }
+
+        @keyframes rotateRing {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 内圈 */
+        .symbol-inner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            border: 1px solid #444;
+            border-radius: 50%;
+            animation: rotateRing 15s linear infinite reverse;
+        }
+
+        /* 中心点 */
+        .symbol-core {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: #666;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            animation: corePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes corePulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 255, 255, 0.5); }
+        }
+
+        /* 启示卡片 */
+        .revelation-card {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 320px;
+            padding: 40px;
+            background: rgba(20, 20, 20, 0.95);
+            border: 1px solid #333;
+            opacity: 0;
+            transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 30;
+            backdrop-filter: blur(10px);
+        }
+
+        .revelation-card.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .revelation-icon {
+            width: 40px;
+            height: 1px;
+            background: #666;
+            margin: 0 auto 30px;
         }
 
         .site-name {
-            font-size: 2.5rem;
+            font-size: 1.8em;
             font-weight: 300;
-            color: var(--accent);
-            margin-bottom: 15px;
-            opacity: 1;
-            transition: opacity 0.3s ease;
+            color: #fff;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
         }
 
         .site-url {
-            font-size: 0.8rem;
-            color: var(--text-sub);
-            font-family: "Courier New", monospace; /* 程序员/严谨感 */
+            font-size: 0.7em;
+            color: #666;
+            margin-bottom: 30px;
+            word-break: break-all;
+            letter-spacing: 1px;
         }
 
-        /* 按钮设计 */
-        .button-group {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
+        .visit-link {
+            display: inline-block;
+            padding: 12px 0;
+            color: #999;
+            text-decoration: none;
+            font-size: 0.75em;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #333;
+            transition: all 0.3s ease;
+            width: 200px;
         }
 
-        .btn {
-            background: none;
-            border: none;
-            color: var(--text-sub);
+        .visit-link:hover {
+            color: #fff;
+            border-bottom-color: #666;
+        }
+
+        /* 神谕按钮 */
+        .invoke-btn {
+            padding: 16px 50px;
+            background: transparent;
+            color: #999;
+            border: 1px solid #333;
+            font-size: 0.75em;
+            font-weight: 400;
             cursor: pointer;
-            font-size: 0.85rem;
-            padding: 10px 0;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            transition: all 0.4s ease;
             position: relative;
-            transition: color 0.3s ease;
+            overflow: hidden;
+            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+            animation: fadeInUp 1.2s ease 0.6s backwards;
         }
 
-        .btn:hover {
-            color: var(--accent);
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 按钮下方的互动线条 */
-        .btn::after {
+        .invoke-btn::before {
             content: '';
             position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 1px;
-            background: var(--accent);
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-
-        .btn:hover::after {
+            top: 0;
+            left: -100%;
             width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            transition: left 0.4s ease;
         }
 
-        /* 辅助动画 */
-        .loading {
-            filter: blur(8px);
-            opacity: 0;
+        .invoke-btn:hover {
+            color: #fff;
+            border-color: #666;
+        }
+
+        .invoke-btn:hover::before {
+            left: 100%;
+        }
+
+        .invoke-btn:active {
+            transform: scale(0.98);
+        }
+
+        .invoke-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* 粒子效果 */
+        .particle {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            background: #666;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        @keyframes particleFloat {
+            to {
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
+        }
+
+        /* 响应式 */
+        @media (max-height: 800px) {
+            body {
+                padding: 30px 20px;
+            }
+            
+            .title {
+                font-size: 2.2em;
+            }
+            
+            .subtitle {
+                margin-bottom: 40px;
+            }
+            
+            .oracle-stage {
+                height: 350px;
+                margin-bottom: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 30px 15px;
+            }
+            
+            .title {
+                font-size: 1.8em;
+                letter-spacing: 4px;
+            }
+            
+            .subtitle {
+                font-size: 0.65em;
+            }
+            
+            .oracle-symbol {
+                width: 160px;
+                height: 160px;
+            }
+            
+            .revelation-card {
+                width: 280px;
+                padding: 30px 25px;
+            }
+            
+            .invoke-btn {
+                padding: 14px 40px;
+            }
         }
     </style>
 </head>
 <body>
 
+<!-- 环境光 -->
+<div class="ambient-light"></div>
+
 <div class="container">
-    <div class="meta-text">Randomizing Consciousness / 随机探索</div>
-    
-    <div id="display-area">
-        <div id="name" class="site-name">Loading...</div>
-        <div id="url" class="site-url">---</div>
+    <div class="header-line"></div>
+    <h1 class="title">Oracle</h1>
+    <p class="subtitle">Knowledge Revelation</p>
+
+    <div class="oracle-stage" id="stage">
+        <!-- 启示卡片 -->
+        <div class="revelation-card" id="revelation-card">
+            <div class="revelation-icon"></div>
+            <div class="site-name" id="site-name"></div>
+            <div class="site-url" id="site-url"></div>
+            <a href="#" class="visit-link" id="visit-link" target="_blank">Enter →</a>
+        </div>
+
+        <!-- 神谕符文 -->
+        <div class="oracle-symbol" id="oracle-symbol">
+            <div class="symbol-ring"></div>
+            <div class="symbol-inner"></div>
+            <div class="symbol-core"></div>
+        </div>
     </div>
 
-    <div class="button-group">
-        <button class="btn" onclick="shuffle()">SHUFFLE 随机</button>
-        <button class="btn" onclick="openSite()">ENTER 进入</button>
+    <button class="invoke-btn" id="invoke-btn" onclick="invokeOracle()">
+        <span id="btn-text">Invoke</span>
+    </button>
+    
+    <div id="timer-hint" style="margin-top: 20px; color: #444; font-size: 0.7em; letter-spacing: 2px; text-transform: uppercase;">
+        Expanding: <span id="countdown">10m 0s</span> Left
     </div>
 </div>
 
 <script>
     const sites = [
-        { name: "极客时间", url: "https://time.geekbang.org/" },
-        { name: "网易公开课", url: "https://open.163.com/" },
-        { name: "中国大学 MOOC", url: "https://www.icourse163.org/" },
-        { name: "混沌大学", url: "https://www.hundun.cn/" },
-        { name: "豆瓣读书", url: "https://book.douban.com/" },
-        { name: "简书", url: "https://www.jianshu.com/" },
-        { name: "中国知网", url: "https://www.cnki.net/" },
-        { name: "维基百科", url: "https://zh.wikipedia.org/" },
-        { name: "国家图书馆", url: "http://www.nlc.cn/" },
-        { name: "人民网新闻", url: "http://www.people.com.cn/" },
-        { name: "新华网新闻", url: "http://www.xinhuanet.com/" },
-        { name: "凤凰网资讯", url: "https://www.ifeng.com/" }
-    ];
+    { name: "即梦AI", url: "https://jimeng.jianying.com/ai-tool/home/" },
+    { name: "Midjourney", url: "https://www.midjourney.com/" },
+    { name: "suno", url: "https://suno.com/" },
+    { name: "Hugging Face", url: "https://huggingface.co/" },
+    { name: "flomo", url: "https://flomoapp.com/" },
+    { name: "GitHub 代码托管", url: "https://github.com/" },
+    { name: "makeapie可视化图形", url: "https://www.makeapie.cn" },
+    { name: "大眼仔软件", url: "https://www.dayanzai.me/" },
+    { name: "B站视频", url: "https://www.bilibili.com/" },
+    { name: "YouTube", url: "https://www.youtube.com/" },
+    { name: "TED 演讲", url: "https://www.ted.com/" },
+    { name: "Coursera", url: "https://www.coursera.org/" },
+    { name: "edX", url: "https://www.edx.org/" },
+    { name: "慕课网", url: "https://www.imooc.com/" },
+    { name: "极客时间", url: "https://time.geekbang.org/" },
+    { name: "网易公开课", url: "https://open.163.com/" },
+    { name: "中国大学MOOC", url: "https://www.icourse163.org/" },
+    { name: "混沌大学", url: "https://www.hundun.cn/" },
+    { name: "豆瓣读书", url: "https://book.douban.com/" },
+    { name: "维基百科", url: "https://zh.wikipedia.org/" },
+    { name: "国家图书馆", url: "http://www.nlc.cn/" },
+    { name: "人民网新闻", url: "http://www.people.com.cn/" },
+    { name: "新华网新闻", url: "http://www.xinhuanet.com/" },
+    { name: "Reddit", url: "https://www.reddit.com/" },
+    { name: "Pexels", url: "https://www.pexels.com/" },
+    { name: "Canva", url: "https://www.canva.com/" },
+    { name: "Pinterest", url: "https://www.pinterest.com/" },
+    { name: "Freepik", url: "https://www.freepik.com/" },
+    { name: "淘宝", url: "https://www.taobao.com/" },
+    { name: "京东", url: "https://www.jd.com/" },
+    { name: "小红书", url: "https://www.xiaohongshu.com/" },
+    { name: "网易云音乐", url: "https://music.163.com/" },
+    { name: "当当", url: "http://book.dangdang.com/" },
+    { name: "微博", url: "https://weibo.com/" },
+    { name: "今日头条", url: "https://www.toutiao.com/" },
+    { name: "第一财经PC", url: "https://www.yicai.com/" },
+    { name: "三联生活周刊", url: "https://www.lifeweek.com.cn/" },
+    { name: "财新周刊", url: "https://weekly.caixin.com/" }
+];
 
-    let currentSite = null;
+    let lastIndex = -1;
+    let isAnimating = false;
 
-    function shuffle() {
-        const display = document.getElementById('display-area');
-        const nameEl = document.getElementById('name');
-        const urlEl = document.getElementById('url');
-
-        // 高级感动画：先模糊消失
-        display.classList.add('loading');
+    // 创建漂浮粒子
+    function createParticles() {
+        const stage = document.getElementById('stage');
         
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animation = `particleFloat ${Math.random() * 3 + 2}s ease-out forwards`;
+            particle.style.animationDelay = Math.random() * 0.5 + 's';
+            
+            stage.appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 5000);
+        }
+    }
+
+    // 调用神谕
+    function invokeOracle() {
+        if (isAnimating) return;
+        isAnimating = true;
+
+        const symbol = document.getElementById('oracle-symbol');
+        const card = document.getElementById('revelation-card');
+        const btn = document.getElementById('invoke-btn');
+        const btnText = document.getElementById('btn-text');
+
+        // 重置状态
+        symbol.classList.remove('revealing', 'revealed');
+        card.classList.remove('show');
+        btn.disabled = true;
+        btnText.textContent = 'Channeling...';
+
+        // 1. 符文脉动
         setTimeout(() => {
-            const randomIndex = Math.floor(Math.random() * sites.length);
-            currentSite = sites[randomIndex];
-            
-            nameEl.innerText = currentSite.name;
-            urlEl.innerText = currentSite.url;
-            
-            // 重新显现
-            display.classList.remove('loading');
+            symbol.classList.add('revealing');
+        }, 50);
+
+        // 2. 创建粒子效果
+        setTimeout(() => {
+            createParticles();
         }, 400);
+
+        // 3. 符文淡出，显示启示
+        setTimeout(() => {
+            symbol.classList.remove('revealing');
+            symbol.classList.add('revealed');
+
+            // 随机选择
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * sites.length);
+            } while (newIndex === lastIndex && sites.length > 1);
+            
+            lastIndex = newIndex;
+            const result = sites[newIndex];
+
+            // 更新卡片
+            document.getElementById('site-name').textContent = result.name;
+            document.getElementById('site-url').textContent = result.url;
+            document.getElementById('visit-link').href = result.url;
+            
+            // 显示卡片
+            card.classList.add('show');
+            
+            btnText.textContent = 'Invoke Again';
+            btn.disabled = false;
+            isAnimating = false;
+            
+            // 启动倒计时
+            startTimer();
+        }, 800);
     }
 
-    function openSite() {
-        if (currentSite) window.open(currentSite.url, '_blank');
+    // 倒计时功能
+    let seconds = 600; // 10分钟
+    let timerInterval = null;
+    let timerStarted = false;
+
+    function formatTime(totalSeconds) {
+        const minutes = Math.floor(totalSeconds / 60);
+        const secs = totalSeconds % 60;
+        return `${minutes}m ${secs}s`;
     }
 
-    // 初始化调用
-    window.onload = shuffle;
+    function startTimer() {
+        // 只启动一次
+        if (timerStarted) return;
+        timerStarted = true;
+        
+        const timerEl = document.getElementById('countdown');
+        const hintEl = document.getElementById('timer-hint');
+        
+        // 启动计时器
+        timerInterval = setInterval(() => {
+            if (seconds > 0) {
+                seconds--;
+                timerEl.textContent = formatTime(seconds);
+            } else {
+                clearInterval(timerInterval);
+                hintEl.textContent = "✓ Knowledge Expanded";
+                hintEl.style.color = "#666";
+            }
+        }, 1000);
+    }
 </script>
 
 </body>
